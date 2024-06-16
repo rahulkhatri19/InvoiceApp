@@ -4,9 +4,9 @@ import 'package:invoice_app/localDb/InvoiceModel.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-// InvoiceModel("RK Software", "Awwa Shop", "101", "06 June 24", "A/12, Shrenik Park, GIDC Road, Opp. Jain Mandir, Akota, Vadodra", "99000 00000, 88000 00000", "", "", "", "", "", "", "", "", "", "", "", );
 
-// InvoiceModel(this.companyName, this.customerName, this.invoiceNumber, this.date, this.address, this.contactNumber, this.email, this.invoiceType, this.customerPhoneNumber, this.invoiceDetail, this.gstNumber, this.discount, this.sgstPercent, this.sgstAmount, this.cgstPercent, this.cgstAmount,this.invoiceTotal, this.termAndConditionList);
+
+// InvoiceModel(this.companyName, this.customerName, this.invoiceNumber, this.date, this.address, this.contactNumber, this.email, this.invoiceType, this.customerPhoneNumber, this.invoiceDetail, this.gstNumber, this.discount, this.sgstPercent, this.sgstAmount, this.cgstPercent, this.cgstAmount,this.invoiceTotal, this.termAndConditionList); taxableAmount
 
 class BillTemplate {
   Widget billHeader(InvoiceModel invoice) => Column(
@@ -28,9 +28,9 @@ class BillTemplate {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("E-mail: rksoftwares@gmail.com", style: TextStyle(fontSize: 5)),
+              Text("E-mail: ${invoice.email}", style: TextStyle(fontSize: 5)),
               Padding(padding: EdgeInsets.only(left: 10),
-                child: Text("Tax Invoice", style: TextStyle(fontSize: 6, fontWeight: FontWeight.bold)),)
+                child: Text(invoice.invoiceType, style: TextStyle(fontSize: 6, fontWeight: FontWeight.bold)),)
             ],
           )
         ],
@@ -48,7 +48,7 @@ class BillTemplate {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Cash Bill", style: TextStyle(fontSize: 10),),
-                Text("Phone:", style: TextStyle(fontSize: 10),),
+                Text("Phone: ${invoice.customerPhoneNumber}", style: TextStyle(fontSize: 10),),
               ],),
           ),
 
@@ -59,19 +59,19 @@ class BillTemplate {
                 TableRow(
                     children: [
                       Text("Invoice No", style: TextStyle(fontSize: 9),),
-                      Text(": 101", style: TextStyle(fontSize: 9),),
+                      Text(": ${invoice.invoiceNumber}", style: TextStyle(fontSize: 9),),
                     ]
                 ),
                 TableRow(
                     children: [
                       Text("Invoice Dt", style: TextStyle(fontSize: 9),),
-                      Text(": 102", style: TextStyle(fontSize: 9),),
+                      Text(": ${invoice.date}", style: TextStyle(fontSize: 9),),
                     ]
                 ),
                 TableRow(
                     children: [
                       Text("Time", style: TextStyle(fontSize: 9),),
-                      Text(": 103", style: TextStyle(fontSize: 9),),
+                      Text(": ", style: TextStyle(fontSize: 9),),
                     ]
                 )
               ],
@@ -85,7 +85,7 @@ class BillTemplate {
     ]
   );
 
-  Widget billBody() {
+  Widget billBody(InvoiceModel invoice) {
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -110,52 +110,19 @@ class BillTemplate {
                 Center(child: Text("Total",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
               ]
           ),
-          for(var i = 0; i < 30; i++) TableRow(
+
+          for(var i = 0; i < invoice.invoiceDetail.length; i++) TableRow(
               children: [
-                Center(child: Text("${i+1}",style: TextStyle(fontSize: 10))),
-                Center(child: Text("T Shirt",style: TextStyle(fontSize: 10))),
-                Center(child: Text("XL",style: TextStyle(fontSize: 10))),
-                Center(child: Text("2",style: TextStyle(fontSize: 10))),
-                Center(child: Text("700.00",style: TextStyle(fontSize: 10))),
-                Center(child: Text("1400.00",style: TextStyle(fontSize: 10))),
+
+                Center(child: Text(invoice.invoiceDetail[i].srNumber,style: TextStyle(fontSize: 10))),
+                Center(child: Text(invoice.invoiceDetail[i].description,style: TextStyle(fontSize: 10))),
+                Center(child: Text(invoice.invoiceDetail[i].size,style: TextStyle(fontSize: 10))),
+                Center(child: Text(invoice.invoiceDetail[i].qty,style: TextStyle(fontSize: 10))),
+                Center(child: Text(invoice.invoiceDetail[i].rate,style: TextStyle(fontSize: 10))),
+                Center(child: Text(invoice.invoiceDetail[i].total,style: TextStyle(fontSize: 10))),
               ]
           ),
         ],
-      ),
-      Table(
-        columnWidths: {
-          0:FractionColumnWidth(0.1),
-          1:FractionColumnWidth(0.3),
-          2:FractionColumnWidth(0.15),
-          3:FractionColumnWidth(0.15),
-          4:FractionColumnWidth(0.15),
-          5:FractionColumnWidth(0.15),
-        },
-        children: [
-          TableRow(
-              children: [
-                Center(child: Text("Sr.",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-                Center(child: Text("Description",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-                Center(child: Text("Size",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-                Center(child: Text("Qty",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-                Center(child: Text("Rate",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-                Center(child: Text("Total",style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),),
-              ]
-          ),
-          for(var i = 0; i < 30; i++) TableRow(
-              children: [
-                Center(child: Text("${i+1}",style: TextStyle(fontSize: 10))),
-                Center(child: Text("T Shirt",style: TextStyle(fontSize: 10))),
-                Center(child: Text("XL",style: TextStyle(fontSize: 10))),
-                Center(child: Text("2",style: TextStyle(fontSize: 10))),
-                Center(child: Text("700.00",style: TextStyle(fontSize: 10))),
-                Center(child: Text("1400.00",style: TextStyle(fontSize: 10))),
-              ]
-          ),
-        ],
-      ),
-      Container(
-        child: Text("")
       )
     ],
   );
@@ -167,7 +134,7 @@ class BillTemplate {
     return byteList;
   }
 
-  Widget billFooter() {
+  Widget billFooter(InvoiceModel invoice) {
     return Column(
       children: [
         Divider(
@@ -177,8 +144,8 @@ class BillTemplate {
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("GSTIN : 29GGGGG1314R9Z6", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
-              Text("Less : 0.00", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+              Text("GSTIN : ${invoice.gstNumber}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+              Text("Less : ${invoice.discount}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
             ]),
 
         Row(
@@ -189,6 +156,7 @@ class BillTemplate {
               child: Table(
                 children: [
                   TableRow(
+                    // taxable - 666, sgst - 2.5% 16 ,
                       children: [
                         Center(child: Text("Taxable", style: TextStyle(fontSize: 9))),
                         Center(child: Text("SGST%", style: TextStyle(fontSize: 9))),
@@ -199,18 +167,18 @@ class BillTemplate {
                   ),
                   TableRow(
                       children: [
-                        Center(child: Text("666", style: TextStyle(fontSize: 9))),
-                        Center(child: Text("2.5%", style: TextStyle(fontSize: 9))),
-                        Center(child: Text("16.00", style: TextStyle(fontSize: 9))),
-                        Center(child: Text("2.5%", style: TextStyle(fontSize: 9))),
-                        Center(child: Text("16.00", style: TextStyle(fontSize: 9)))
+                        Center(child: Text(invoice.taxableAmount, style: TextStyle(fontSize: 9))),
+                        Center(child: Text(invoice.sgstPercent, style: TextStyle(fontSize: 9))),
+                        Center(child: Text(invoice.sgstAmount, style: TextStyle(fontSize: 9))),
+                        Center(child: Text(invoice.cgstPercent, style: TextStyle(fontSize: 9))),
+                        Center(child: Text(invoice.cgstAmount, style: TextStyle(fontSize: 9)))
                       ]
                   ),
 
                 ],
               ),
             ),
-            Text("TOTAL : 667.00", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+            Text("TOTAL : ${invoice.invoiceTotal}", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
           ],
         ),
 
@@ -221,69 +189,18 @@ class BillTemplate {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Term & Conditions E.& O.E.", textAlign: TextAlign.start, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 9)),
-
-                Text("1. That is returned after 7 Days from purchase date", textAlign: TextAlign.start, style: TextStyle(fontSize: 9)),
-
-                Text("2. That does not have a valid product receipt.", textAlign: TextAlign.start, style: TextStyle(fontSize: 9)),
-
-                Text("3. That does not have original hangtags barcodes.", style: TextStyle(fontSize: 9)),
-
-                Text("4. That is not in the original condition, is damages or is missing part. ", style: TextStyle(fontSize: 9)),
-
-                Text("5. That has been used or washed after purchase.", style: TextStyle(fontSize: 9)),
+                for(var i = 0; i < invoice.termAndConditionList.length; i++) Text(invoice.termAndConditionList[i], textAlign: TextAlign.start, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 9))
               ],
             ),
             Column(
               children: [
                 Text("Certified that above information is true and correct", style: TextStyle(fontSize: 8, fontWeight: FontWeight.normal)),
-                Text("For RK Software", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+                Text("For ${invoice.companyName}", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
               ],
             )
           ],
         ),
       ]
-    );
-  }
-
-  static Widget buildInvoice() {
-    final headers = [
-      'Description',
-      'Date',
-      'Quantity',
-      'Unit Price',
-      'VAT',
-      'Total'
-    ];
-    final data = [].toList();
-    // final data = invoice.items.map((item) {
-    //   final total = item.unitPrice * item.quantity * (1 + item.vat);
-    //
-    //   return [
-    //     item.description,
-    //     Utils.formatDate(item.date),
-    //     '${item.quantity}',
-    //     '\$ ${item.unitPrice}',
-    //     '${item.vat} %',
-    //     '\$ ${total.toStringAsFixed(2)}',
-    //   ];
-    // }).toList();
-
-    return TableHelper.fromTextArray(
-      headers: headers,
-      data: [data],
-      border: null,
-      headerStyle: TextStyle(fontWeight: FontWeight.bold),
-      headerDecoration: const BoxDecoration(color: PdfColors.grey300),
-      cellHeight: 30,
-      cellAlignments: {
-        0: Alignment.centerLeft,
-        1: Alignment.centerRight,
-        2: Alignment.centerRight,
-        3: Alignment.centerRight,
-        4: Alignment.centerRight,
-        5: Alignment.centerRight,
-      },
     );
   }
 }

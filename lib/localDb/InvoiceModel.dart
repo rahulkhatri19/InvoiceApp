@@ -16,6 +16,7 @@ class InvoiceModel {
   String cgstPercent;
   String cgstAmount;
   String invoiceTotal;
+  String taxableAmount;
   List<String> termAndConditionList;
 
   InvoiceModel(
@@ -36,6 +37,7 @@ class InvoiceModel {
       this.cgstPercent,
       this.cgstAmount,
       this.invoiceTotal,
+      this.taxableAmount,
       this.termAndConditionList);
 }
 

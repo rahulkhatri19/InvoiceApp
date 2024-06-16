@@ -19,11 +19,19 @@ class _BillHomePage extends State<BillHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    for(var i = 0; i < 30; i++) {
-      invoiceDetailList.add(InvoiceDetail("T Shirt", "XL", "2", "700.00", "1400.00"));
+    for(var i = 0; i < 18; i++) {
+      invoiceDetailList.add(InvoiceDetail("${i+1}", "T Shirt", "XL", "2", "700.00", "1400.00"));
     }
+    List<String> termConditionList = [];
+    termConditionList.add("Term & Conditions E.& O.E.");
+    termConditionList.add("1. That is returned after 7 Days from purchase date.");
+    termConditionList.add("2. That does not have a valid product receipt.");
+    termConditionList.add("3. That does not have original hangtags barcodes.");
+    termConditionList.add("4. That is not in the original condition, is damages or is missing part.");
+    termConditionList.add("5. That has been used or washed after purchase.");
 
-    final InvoiceModel invoiceModel = InvoiceModel("Awwa Shop", "004", "02 June 2024", invoiceDetailList);
+
+    final InvoiceModel invoiceModel = InvoiceModel("RK Software", "Awwa Shop", "101", "06 June 24", "A/12, Shrenik Park, GIDC Road, Opp. Jain Mandir, Akota, Vadodra", "99000 00000, 88000 00000", "rksoftwares@gmail.com", "Tax Invoice", "99000 00000", invoiceDetailList, "29GGGGG1314R9Z6", "0.00", "2.5%", "16", "2.5%", "16", "667", "666", termConditionList);
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +66,7 @@ class _BillHomePage extends State<BillHomePage> {
                                 backgroundColor: WidgetStateProperty.all(Colors.yellow[500])
                             ),
                             onPressed: () async {
-                              final data = await pdfUtility.generatePdf();
+                              final data = await pdfUtility.generatePdf(invoiceModel);
                               pdfUtility.savePdfFile("Hello PDF", data);
                             }, child:
                         Text("Invoice Pdf", style: TextStyle(

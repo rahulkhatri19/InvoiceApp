@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:invoice_app/localDb/InvoiceModel.dart';
 import 'package:invoice_app/template/BillTemplate.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,13 +11,13 @@ import 'package:pdf/widgets.dart';
 
 class PDFUtility{
   final BillTemplate billTemp = BillTemplate();
-  Future<Uint8List> generatePdf(){
+  Future<Uint8List> generatePdf(InvoiceModel invoiceModel){
     final pdf = Document();
     pdf.addPage(MultiPage(
         pageFormat: PdfPageFormat.a4,
-        build: (Context context) => [billTemp.billBody()],
-        header: (Context context) => billTemp.billHeader(),
-        footer: (Context context) => billTemp.billFooter()));
+        build: (Context context) => [billTemp.billBody(invoiceModel)],
+        header: (Context context) => billTemp.billHeader(invoiceModel),
+        footer: (Context context) => billTemp.billFooter(invoiceModel)));
     return pdf.save();
   }
 
